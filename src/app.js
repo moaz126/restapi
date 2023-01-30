@@ -24,6 +24,7 @@ app.post('/register',(req,res)=>{
         console.log(req.body);
         const user=new Student(req.body);
         user.save();
+        res.send(user);
     } catch (error) {
         res.send(error);
     }
