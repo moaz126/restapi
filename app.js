@@ -1,6 +1,6 @@
 const express=require("express");
 const bcrypt = require('bcrypt');
-const Student=require("./db/student")
+const Student=require("./src/db/student")
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb+srv://moaz:moaz@cluster0.b8mbysh.mongodb.net/myDatabase?retryWrites=true&w=majority', {
@@ -81,6 +81,20 @@ app.get('/student/:id',async (req,res)=>{
     }
     
     
+})
+app.post('/login',(req,res)=>{
+    
+    const password = req.body.password;
+    const encryptedPassword ='$2b$10$TFRTINJcaHbNYPrLodu3PuiuMjUX/QErG3QxiVq0OuUnyRYnrfIw2'
+    bcrypt.compare(password, encryptedPassword, function(err, result) {
+        if (result === true) {
+          console.log('Password is correct');
+          res.send("Login successfully")
+        } else {
+          console.log('Password is incorrect');
+          res.status(400).send('Password is incorrect');
+        }
+      });
 })
 
 app.listen(port,()=>{
