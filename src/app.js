@@ -1,4 +1,5 @@
 const express=require("express");
+const bcrypt = require('bcrypt');
 const Student=require("./db/student")
 const mongoose = require('mongoose');
 
@@ -22,9 +23,43 @@ app.get('',(req,res)=>{
 app.post('/register',(req,res)=>{
     try {
         console.log(req.body);
-        const user=new Student(req.body);
-        user.save();
-        res.send(user);
+        const password=req.body.password;
+        console.log(password);
+        bcrypt.hash(password, 10, (err, hash) => {
+            if (err) {
+              return res.status(500).send({ error: err });
+            }
+            const user= new Student({
+                firstname:req.body.firstname,
+                secondname:req.body.secondname,
+                password:hash,
+                phonenumber:req.body.phonenumber,
+                address:req.body.address,
+            });
+            
+        user.save().then(()=>{
+            const message={
+                success:true,
+                token:hash,
+                message:"User register successfully!"
+            }
+            res.send(JSON.stringify(message))
+        }).catch((er)=>{
+            if (er.code==11000) {
+                const error={
+                    success:false,
+                    message:"Phone number already exist!"
+                }
+                res.status(400).send(JSON.stringify(error));
+                
+            } else {
+                res.status(400).send(er)
+            }
+           
+        })
+           
+          });
+       
     } catch (error) {
         res.send(error);
     }

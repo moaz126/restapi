@@ -12,11 +12,16 @@ const studentSchema=new mongoose.Schema({
         required:true,
         minLength:3,
     },
+    password:{
+       type:String,
+       required:true,
+       minLength:8
+    },
     phonenumber:{
         type:Number,
         required:true,
         minLength:11,
-       
+        unique:[true,'phone number already exist'],
     },
     address:{
         type:String,
