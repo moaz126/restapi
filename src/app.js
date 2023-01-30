@@ -15,7 +15,7 @@ db.once('open', function() {
 });
 const app=express();
 app.use(express.json())
-const port=process.env.PORT || 8000;
+const port=process.env.PORT || 3000;
 app.get('',(req,res)=>{
     res.send('hello from moaz');
 })
@@ -23,16 +23,7 @@ app.post('/register',(req,res)=>{
     try {
         console.log(req.body);
         const user=new Student(req.body);
-        user.save().then(()=>{
-            res.send(user)
-        }).catch((er)=>{
-            if (er.code==11000) {
-                res.send("phone number already exist")
-            } else {
-                res.send(er)
-            }
-           
-        })
+        user.save();
     } catch (error) {
         res.send(error);
     }
